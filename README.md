@@ -1,59 +1,82 @@
-# SOC Incident Triage Platform
+![Capa da Plataforma de Triagem de Incidentes SOC](docs/capa.svg)
 
-An explainable, local-first security operations project that transforms fictional authentication logs into prioritized alerts and auditable investigation cases.
+<div align="center">
 
-> Built as a hands-on portfolio project covering Python, SQL, detection engineering, incident triage, automated tests, Git and Linux-compatible CI.
+# Plataforma de Triagem de Incidentes SOC
 
-## Why this project exists
+![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?style=flat-square&logo=python&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-Trilha_auditável-003B57?style=flat-square&logo=sqlite&logoColor=white)
+![Segurança](https://img.shields.io/badge/Segurança-Triagem_SOC-0F766E?style=flat-square)
+![Testes](https://img.shields.io/badge/Testes-7_aprovados-22C55E?style=flat-square)
 
-Security teams receive large volumes of authentication events. Analysts need a repeatable way to validate records, identify suspicious behavior, prioritize risk and document every investigation decision.
+</div>
 
-This project demonstrates that workflow without using real personal or corporate data.
+Projeto de portfólio em Python e SQL que transforma logs fictícios de autenticação em alertas priorizados e casos de investigação com histórico auditável.
 
-## Current capabilities
+> **Papel no portfólio:** evolução integrada do [Analisador de Logs de Segurança](https://github.com/NicolasMarquesSousa/analisador-logs-seguranca) e do [Banco de Incidentes de Segurança](https://github.com/NicolasMarquesSousa/banco-incidentes-seguranca). Este projeto conecta ingestão, detecção, persistência e acompanhamento operacional em um único fluxo.
 
-- CSV ingestion, validation and normalization;
-- explainable detection rules and risk scores;
-- idempotent SQLite persistence;
-- prioritized alert queue;
-- incident lifecycle: `open` → `investigating` → `resolved`;
-- analyst, note and UTC timestamp audit trail;
-- case history queries;
-- automated unit tests;
-- GitHub Actions pipeline running on Linux.
+## Problema resolvido
 
-## Architecture
+Equipes de segurança recebem muitos eventos de autenticação e precisam separar rapidamente atividades normais de comportamentos que exigem investigação. A aplicação:
+
+- importa e valida eventos de um arquivo CSV;
+- normaliza usuários, equipamentos, horários e endereços IP;
+- detecta comportamentos suspeitos com regras explicáveis;
+- calcula pontuações de risco;
+- armazena eventos e alertas em SQLite sem duplicação;
+- prioriza a fila de alertas;
+- acompanha o ciclo de vida do incidente;
+- registra analista, observação e horário de cada decisão.
+
+Todos os dados de demonstração são fictícios.
+
+## Fluxo
 
 ```text
-Fictional CSV logs
+Logs CSV fictícios
         │
         ▼
-Validation and normalization
+Validação e normalização
         │
         ▼
-Detection rules and risk scoring
+Regras de detecção e pontuação de risco
         │
         ▼
 SQLite ── auth_events
    │    ├─ alerts
    │    └─ alert_history
    ▼
-CLI: summary, alert queue and case history
+Resumo, fila priorizada e histórico do caso
 ```
 
-## Detection rules
+## Regras de detecção
 
-| Rule | Logic | Severity | MITRE ATT&CK context |
+| Regra | Critério | Severidade | Contexto |
 |---|---|---:|---|
-| `BRUTE_FORCE` | Five or more failures from one IP within ten minutes | High | T1110 — Brute Force |
-| `SUCCESS_AFTER_FAILURES` | Successful login after three or more recent failures | Critical | Possible account compromise |
-| `OFF_HOURS_LOGIN` | Successful login between 22:00 and 06:00 | Medium | Contextual anomaly |
+| `BRUTE_FORCE` | Cinco ou mais falhas do mesmo IP em até dez minutos | Alta | MITRE ATT&CK T1110 |
+| `SUCCESS_AFTER_FAILURES` | Login bem-sucedido após três ou mais falhas recentes | Crítica | Possível comprometimento de conta |
+| `OFF_HOURS_LOGIN` | Login bem-sucedido entre 22h e 6h | Média | Anomalia de contexto |
 
-The rules are intentionally transparent. Each alert stores human-readable evidence so an analyst can understand why it fired.
+Cada alerta guarda uma evidência legível para que o analista entenda por que a regra foi acionada.
 
-## Quick start
+## Ciclo da investigação
 
-Requires Python 3.11 or newer. The application has no external runtime dependencies.
+```text
+open → investigating → resolved
+```
+
+Cada mudança registra:
+
+- status anterior e novo status;
+- nome do analista;
+- observação da investigação;
+- data e horário em UTC.
+
+Esse histórico evita que decisões sejam sobrescritas sem rastreabilidade.
+
+## Como executar
+
+Requer Python 3.11 ou superior e não utiliza dependências externas em tempo de execução.
 
 ### Windows PowerShell
 
@@ -64,7 +87,7 @@ python -m soc_triage.cli summary --database soc_triage.db
 python -m soc_triage.cli alerts --database soc_triage.db
 ```
 
-### Linux or macOS
+### Linux e macOS
 
 ```bash
 export PYTHONPATH=src
@@ -73,69 +96,79 @@ python -m soc_triage.cli summary --database soc_triage.db
 python -m soc_triage.cli alerts --database soc_triage.db
 ```
 
-## Investigation workflow
+## Registrar uma investigação
 
-Assign an alert to an analyst and document the decision:
+Assumir um alerta:
 
-```bash
-python -m soc_triage.cli status 2 investigating \
-  --analyst "Nicolas Marques" \
-  --note "Reviewing the source IP and authentication timeline" \
-  --database soc_triage.db
+```powershell
+python -m soc_triage.cli status 2 investigating --analyst "Nicolas Marques" --note "Validando IP de origem e linha do tempo" --database soc_triage.db
 ```
 
-Resolve it after investigation:
+Concluir a análise:
 
-```bash
-python -m soc_triage.cli status 2 resolved \
-  --analyst "Nicolas Marques" \
-  --note "Confirmed simulated activity; no containment required" \
-  --database soc_triage.db
+```powershell
+python -m soc_triage.cli status 2 resolved --analyst "Nicolas Marques" --note "Atividade simulada confirmada; nenhuma contenção necessária" --database soc_triage.db
 ```
 
-Read the complete case and its audit history:
+Consultar o alerta e todo o histórico:
 
-```bash
+```powershell
 python -m soc_triage.cli case 2 --database soc_triage.db
 ```
 
-## Tests
+## Testes automatizados
 
-```bash
+```powershell
 python -m unittest discover -s tests -v
 ```
 
-Tests cover CSV validation, detection behavior, false-positive prevention, risk ordering, status validation, missing alerts and the audit trail.
+A suíte cobre validação do CSV, regras de detecção, prevenção de falso positivo, ordenação por risco, mudança de status, alertas inexistentes e trilha de auditoria.
 
-## Engineering decisions
+Resultado validado: **7 testes aprovados**. O GitHub Actions executa a mesma suíte automaticamente em Linux.
 
-- **Standard library first:** keeps setup simple and makes the core logic easy to review.
-- **Parameterized SQL:** prevents values from being concatenated into queries.
-- **Unique constraints:** importing the same file again does not duplicate events or alerts.
-- **UTC audit timestamps:** produces consistent investigation records across locations.
-- **In-memory databases in tests:** keeps tests isolated, fast and repeatable.
-- **Fictional data only:** avoids exposing personal, customer or employer information.
+## Decisões técnicas
 
-## Roadmap
+- **SQL parametrizado:** valores não são concatenados às consultas.
+- **Restrições `UNIQUE`:** reprocessar o mesmo arquivo não duplica dados.
+- **Chaves estrangeiras:** relacionam o histórico ao alerta correspondente.
+- **Horários em UTC:** mantêm consistência entre localidades.
+- **SQLite em memória nos testes:** garante isolamento e repetibilidade.
+- **Dados fictícios:** nenhuma informação pessoal, corporativa ou confidencial é publicada.
 
-- REST API with FastAPI;
-- operational dashboard;
-- local IP reputation enrichment;
-- filters by severity, status, user and time range;
-- Docker and PostgreSQL;
-- Power BI executive report;
-- additional ATT&CK-aligned detection rules.
+## Estrutura
 
-## Versão em português
+```text
+data/                       eventos fictícios de autenticação
+src/soc_triage/parser.py    leitura, validação e normalização
+src/soc_triage/rules.py     regras e pontuação de risco
+src/soc_triage/database.py  persistência e trilha de auditoria
+src/soc_triage/cli.py       comandos da aplicação
+tests/                      testes automatizados
+```
 
-Plataforma educacional de triagem de incidentes que importa logs fictícios, valida os registros, detecta comportamentos suspeitos, prioriza alertas por risco e mantém um histórico auditável da investigação. O projeto demonstra competências práticas em Python, SQL, Segurança da Informação, testes automatizados, Git e automação.
+## Tecnologias e conceitos
 
-## Security and privacy
+Python · SQL · SQLite · Git · GitHub Actions · Linux · SOC · triagem de incidentes · engenharia de detecção · MITRE ATT&CK · testes automatizados
 
-- Do not commit real logs, secrets or credentials.
-- All sample identities and IP addresses are fictional or documentation ranges.
-- This educational detection engine does not replace a production SIEM.
+## Próximas evoluções
 
-## Author
+- API REST com FastAPI;
+- dashboard operacional;
+- filtros por severidade, status, usuário e período;
+- enriquecimento local de reputação de IPs;
+- Docker e PostgreSQL;
+- relatório executivo em Power BI.
 
-**Nicolas Marques** — Information Security student and network technician building practical experience in security operations, data analysis and automation.
+## English summary
+
+An explainable SOC incident triage project that validates fictional authentication logs, detects suspicious behavior, prioritizes alerts and preserves an auditable investigation history. Built with Python, SQL, SQLite, automated tests and GitHub Actions.
+
+## Privacidade e segurança
+
+- Não publique logs reais, segredos ou credenciais.
+- Os nomes e endereços IP da amostra são fictícios ou reservados para documentação.
+- O projeto é educacional e não substitui um SIEM corporativo.
+
+---
+
+Desenvolvido por [Nicolas Marques](https://github.com/NicolasMarquesSousa) · [Ver portfólio](https://github.com/NicolasMarquesSousa)

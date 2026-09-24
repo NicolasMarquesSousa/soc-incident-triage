@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="420" viewBox="0 0 1280 420" role="img" aria-labelledby="title desc">
+  <title id="title">Plataforma de Triagem de Incidentes SOC</title>
+  <desc id="desc">Capa azul escura com fluxo de eventos, detecção, alertas e investigação.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07111f"/>
+      <stop offset="1" stop-color="#0f3b4c"/>
+    </linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="1280" height="420" rx="24" fill="url(#bg)"/>
+  <circle cx="1090" cy="74" r="150" fill="#14b8a6" opacity=".08"/>
+  <circle cx="1180" cy="350" r="210" fill="#38bdf8" opacity=".06"/>
+  <g font-family="Segoe UI, Arial, sans-serif" fill="#f8fafc">
+    <text x="72" y="120" font-size="24" fill="#5eead4" font-weight="600" letter-spacing="3">PYTHON · SQL · SECURITY OPERATIONS</text>
+    <text x="72" y="184" font-size="52" font-weight="700">Plataforma de Triagem</text>
+    <text x="72" y="244" font-size="52" font-weight="700">de Incidentes SOC</text>
+    <text x="74" y="296" font-size="22" fill="#cbd5e1">Detecção explicável, priorização de risco e histórico auditável</text>
+  </g>
+  <g transform="translate(760 135)" font-family="Segoe UI, Arial, sans-serif" font-size="16" text-anchor="middle">
+    <rect x="0" y="0" width="120" height="64" rx="12" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
+    <text x="60" y="39" fill="#e2e8f0">EVENTOS</text>
+    <path d="M120 32h55" stroke="#5eead4" stroke-width="3"/>
+    <path d="M165 24l12 8-12 8" fill="none" stroke="#5eead4" stroke-width="3"/>
+    <rect x="178" y="0" width="120" height="64" rx="12" fill="#0f172a" stroke="#5eead4" stroke-width="2"/>
+    <text x="238" y="39" fill="#e2e8f0">DETECÇÃO</text>
+    <path d="M298 32h55" stroke="#f59e0b" stroke-width="3"/>
+    <path d="M343 24l12 8-12 8" fill="none" stroke="#f59e0b" stroke-width="3"/>
+    <rect x="356" y="0" width="120" height="64" rx="12" fill="#0f172a" stroke="#f59e0b" stroke-width="2" filter="url(#glow)"/>
+    <text x="416" y="39" fill="#e2e8f0">ALERTAS</text>
+    <path d="M416 64v55" stroke="#a78bfa" stroke-width="3"/>
+    <path d="M408 109l8 12 8-12" fill="none" stroke="#a78bfa" stroke-width="3"/>
+    <rect x="326" y="122" width="180" height="64" rx="12" fill="#0f172a" stroke="#a78bfa" stroke-width="2"/>
+    <text x="416" y="161" fill="#e2e8f0">INVESTIGAÇÃO</text>
+  </g>
+</svg>
