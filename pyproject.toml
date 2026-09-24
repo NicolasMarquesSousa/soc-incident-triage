@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "soc-incident-triage"
+version = "0.1.0"
+description = "MVP local para triagem explicável de eventos de autenticação."
+requires-python = ">=3.11"
+authors = [{ name = "Nicolas Marques" }]
+
+[project.scripts]
+soc-triage = "soc_triage.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
