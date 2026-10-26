@@ -7,13 +7,17 @@
 ![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?style=flat-square&logo=python&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-Trilha_auditável-003B57?style=flat-square&logo=sqlite&logoColor=white)
 ![Segurança](https://img.shields.io/badge/Segurança-Triagem_SOC-0F766E?style=flat-square)
-![Testes](https://img.shields.io/badge/Testes-7_aprovados-22C55E?style=flat-square)
+[![Testes](https://github.com/NicolasMarquesSousa/soc-incident-triage/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/NicolasMarquesSousa/soc-incident-triage/actions/workflows/tests.yml)
 
 </div>
 
 Projeto de portfólio em Python e SQL que transforma logs fictícios de autenticação em alertas priorizados e casos de investigação com histórico auditável.
 
 > **Papel no portfólio:** evolução integrada do [Analisador de Logs de Segurança](https://github.com/NicolasMarquesSousa/analisador-logs-seguranca) e do [Banco de Incidentes de Segurança](https://github.com/NicolasMarquesSousa/banco-incidentes-seguranca). Este projeto conecta ingestão, detecção, persistência e acompanhamento operacional em um único fluxo.
+
+## Veja uma investigação completa
+
+[Abra a investigação demonstrativa](docs/investigacao-demonstrativa.md): comandos reproduzíveis, saída da ingestão, linha do tempo, quatro alertas, hipóteses alternativas e decisão de triagem. A amostra é fictícia; um alerta não confirma comprometimento.
 
 ## Problema resolvido
 
@@ -131,7 +135,7 @@ Resultado validado: **7 testes aprovados**. O GitHub Actions executa a mesma su�
 - **SQL parametrizado:** valores não são concatenados às consultas.
 - **Restrições `UNIQUE`:** reprocessar o mesmo arquivo não duplica dados.
 - **Chaves estrangeiras:** relacionam o histórico ao alerta correspondente.
-- **Horários em UTC:** mantêm consistência entre localidades.
+- **Histórico de decisões em UTC:** os horários dos eventos importados mantêm a representação da origem e precisam ser normalizados antes de correlacionar fusos.
 - **SQLite em memória nos testes:** garante isolamento e repetibilidade.
 - **Dados fictícios:** nenhuma informação pessoal, corporativa ou confidencial é publicada.
 
@@ -149,6 +153,10 @@ tests/                      testes automatizados
 ## Tecnologias e conceitos
 
 Python · SQL · SQLite · Git · GitHub Actions · Linux · SOC · triagem de incidentes · engenharia de detecção · MITRE ATT&CK · testes automatizados
+
+## Limitações e falsos positivos
+
+As regras não confirmam invasão. Senha digitada incorretamente, NAT e atividades autorizadas fora do horário podem exigir contexto adicional. A pontuação é heurística. O parser não normaliza os fusos dos eventos e misturar datas com e sem fuso pode causar erro. Não há integração com SIEM, EDR ou identidade, nem contenção automática. A amostra sintética não mede precisão ou desempenho em produção. Veja os detalhes e as verificações propostas na [investigação demonstrativa](docs/investigacao-demonstrativa.md).
 
 ## Próximas evoluções
 
